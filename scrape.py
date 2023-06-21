@@ -55,24 +55,34 @@ for card in ride_cards:
     card.click()
 
 # collect details about each ride
-d = {'date': [], 'bike_id': [], 'price': [], 'start_time': [], 'end_time': []}
+d = {'date': [], 'bike_id': [], 'price': [], 'start_time': [], 'end_time': [], 'start_loc': [], 'end_loc': []}
 
 details_selector = "div[data-testid='DATA_TESTID_RIDE_DETAILS_INFO']"
 for card, details in zip(driver.find_elements_by_css_selector(ride_card_selector), 
                 driver.find_elements_by_css_selector(details_selector)):
+    # parse date and bike ID
     date, bike_id = [c.text for c in card.find_elements_by_xpath('./div/div')]
 
+    # parse price of ride
     price = card.find_element_by_xpath(".//*[contains(text(), 'Price')]/..").text
     price = price[7:]
     
-    start, end = [d.text for d in details.find_elements_by_xpath('./div/div/div/div')]
-    start, end = start[11:], end[9:]
+    # parse start and end time (ie 2:05 PM)
+    start_elem, end_elem = details.find_element_by_xpath(".//*[contains(text(), 'Started')]"), \
+                    details.find_element_by_xpath(".//*[contains(text(), 'Ended')]")
+    start_time, end_time = start_elem.text[11:], end_elem.text[9:]
+
+    # parse start and end loc (ie 'Haste St at College Ave')
+    start_loc = start_elem.find_element_by_xpath("./..").text.replace('\n' + start_elem.text, '')
+    end_loc = end_elem.find_element_by_xpath("./..").text.replace('\n' + end_elem.text, '')
 
     d['date'].append(date)
     d['bike_id'].append(bike_id)
     d['price'].append(price)
-    d['start_time'].append(start)
-    d['end_time'].append(end)
+    d['start_time'].append(start_time)
+    d['end_time'].append(end_time)
+    d['start_loc'].append(start_loc)
+    d['end_loc'].append(end_loc)
 
 # save to dataframe, csv
 df = pd.DataFrame(d)
