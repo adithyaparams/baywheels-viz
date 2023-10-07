@@ -1,4 +1,4 @@
 # baywheels-viz
 
-Overall past ride data: https://s3.amazonaws.com/baywheels-data/index.html
-Source for past rides: https://s3.amazonaws.com/baywheels-data/index.html
+BayWheels ride history: https://s3.amazonaws.com/baywheels-data/index.html \
+User ride history: https://account.baywheels.com/ride-history
